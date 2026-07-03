@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>ProDev - HTML/CSS/JS Playground & Academy</title>
+  <title>CodexA - HTML/CSS/JS Playground & Academy</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -80,7 +80,7 @@
   <header class="glass-panel sticky top-0 z-40 px-4 h-14 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 shrink-0">
     <div class="flex items-center gap-2">
       <div class="bg-blue-600 text-white p-1.5 rounded-lg"><i data-lucide="terminal" class="w-5 h-5"></i></div>
-      <span class="font-bold text-lg tracking-tight hidden sm:block">ProDev <span class="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 px-1.5 py-0.5 rounded ml-1 font-semibold">STUDIO</span></span>
+      <span class="font-bold text-lg tracking-tight hidden sm:block">CodexA <span class="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 px-1.5 py-0.5 rounded ml-1 font-semibold">STUDIO</span></span>
     </div>
     
     <div class="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
@@ -95,7 +95,6 @@
 
     <div class="flex items-center gap-1.5">
       <button onclick="App.openSettings()" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg touch-target" title="Ayarlar"><i data-lucide="settings" class="w-5 h-5"></i></button>
-      <!-- DEĞİŞİKLİK: Dosya Yöneticisi butonu İndir Butonu ile değiştirildi -->
       <button onclick="App.openDownloadModal()" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg touch-target" title="Projeyi İndir"><i data-lucide="download" class="w-5 h-5"></i></button>
     </div>
   </header>
@@ -192,7 +191,7 @@
         </div>
       </div>
 
-      <!-- Ortak Araç Çubuğu (TAM EKRAN BUTONU EKLENDİ) -->
+      <!-- Ortak Araç Çubuğu -->
       <div class="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 border-t border-b border-gray-200 dark:border-gray-700 flex items-center justify-between shrink-0 overflow-x-auto hide-scrollbar">
         <div class="flex items-center gap-1 shrink-0">
           <button onclick="App.triggerFormat()" class="px-2 py-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded text-xs font-semibold flex items-center gap-1 hover:bg-gray-50"><i data-lucide="sparkles" class="w-3 h-3 text-yellow-500"></i> <span class="hidden sm:inline">Formatla</span></button>
@@ -207,7 +206,6 @@
             <option value="desktop">PC</option>
           </select>
           <button onclick="App.hardRefreshPreview()" class="p-1.5 hover:bg-white dark:hover:bg-gray-700 rounded" title="Yenile"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i></button>
-          <!-- YENİ: TAM EKRAN BUTONU -->
           <button onclick="App.toggleFullscreenPreview()" class="px-2 py-1 bg-blue-600 text-white rounded text-xs font-semibold flex items-center gap-1 hover:bg-blue-700 shadow-sm" title="Canlı Ekranı Tam Ekran Yap">
             <i data-lucide="maximize" class="w-3.5 h-3.5"></i> Tam Ekran
           </button>
@@ -218,7 +216,6 @@
       <div id="preview-section" class="flex-1 flex flex-col bg-white dark:bg-gray-900 relative">
         <div id="preview-wrapper" class="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-950 p-2 overflow-hidden transition-all duration-300">
           
-          <!-- YENİ: TAM EKRANDAN ÇIK BUTONU (Sadece tam ekranda görünür) -->
           <button id="exit-fullscreen-btn" onclick="App.toggleFullscreenPreview()" class="hidden fixed top-4 right-4 z-[110] bg-gray-900/80 text-white px-4 py-2 rounded-full font-bold shadow-xl border border-gray-700 flex items-center gap-2 hover:bg-red-600 transition-colors backdrop-blur">
             <i data-lucide="shrink" class="w-4 h-4"></i> Tam Ekrandan Çık
           </button>
@@ -256,7 +253,7 @@
               <i data-lucide="rocket" class="w-8 h-8 text-white"></i>
             </div>
             <div>
-              <h2 class="font-bold text-xl leading-tight">ProDev Akademi</h2>
+              <h2 class="font-bold text-xl leading-tight">CodexA Akademi</h2>
               <p class="text-sm text-blue-100 font-medium mt-0.5">Sıfırdan Uzmanlığa Kodlama Serüveni</p>
             </div>
           </div>
@@ -278,16 +275,14 @@
       </div>
 
       <div class="p-4 md:p-6 flex-1 space-y-8 max-w-5xl mx-auto w-full">
-        <!-- Modüller dinamik olarak JavaScript tarafından oluşturulacak -->
         <div id="academy-modules-container" class="space-y-8"></div>
       </div>
     </div>
   </main>
 
-  <!-- Modallar ve Toast aynı kaldı (İstisna: Ayarlar ve Download Modal eklendi) -->
-  <div id="modal-health" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">... (İçerik gizlendi)</div>
+  <div id="modal-health" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4"></div>
   
-  <!-- DEĞİŞİKLİK: GERÇEK AYARLAR MODALI EKLENDİ -->
+  <!-- AYARLAR MODALI -->
   <div id="modal-settings" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
     <div class="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800 transform transition-transform">
       <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
@@ -338,7 +333,7 @@
     </div>
   </div>
 
-  <!-- DEĞİŞİKLİK: DOSYA YÖNETİCİSİ YERİNE GERÇEK İNDİRME MODALI EKLENDİ -->
+  <!-- İNDİRME MODALI -->
   <div id="modal-download" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
     <div class="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800 transform transition-transform">
       <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
@@ -376,11 +371,7 @@
   <div id="toast" class="fixed bottom-6 right-6 z-50 bg-gray-900 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none transform translate-y-2"></div>
 
   <script>
-    // ----------------------------------------------------
-    // YENİ NESİL İNTERAKTİF EĞİTİM MÜFREDATI (0'dan Uzmanlığa)
-    // ----------------------------------------------------
     const LessonsDB = [
-      // MODÜL 1: HTML MİMARİSİ
       {
         id: "html-01", category: "html", title: "İlk Sayfanı Oluştur", xp: 50,
         desc: "Web siteleri HTML etiketlerinden (tags) oluşur. Her sayfa genellikle bir <h1> (Ana Başlık) ve <p> (Paragraf) etiketi barındırır. Etiketler küçüktür/büyüktür işaretleri (< >) arasına yazılır.",
@@ -410,8 +401,6 @@
         startJs: "",
         validation: (html, css, js) => html.includes('<a') && html.includes('href="https://google.com"') && html.toLowerCase().includes('google\'a git') && html.includes('</a>')
       },
-      
-      // MODÜL 2: CSS TASARIM UZMANLIĞI
       {
         id: "css-01", category: "css", title: "Renkler ve Seçiciler", xp: 50,
         desc: "CSS, HTML elemanlarını seçip onlara stil vermemizi sağlar. Seçmek için HTML'e 'class' niteliği ekleriz. CSS dosyasında class'ları (.) nokta işareti ile seçeriz.",
@@ -427,7 +416,7 @@
         desc: "HTML'deki her şey bir kutudur. Kutu içindeki yazıyla kenarlık arasındaki boşluğa 'padding', kutunun dışındaki diğer elementlerle olan boşluğuna 'margin' denir.",
         tip: "padding: 20px; yazarak içeriği 4 taraftan şişirip ferahlatabilirsiniz.",
         taskDesc: "'.kart' sınıfına 20px padding (iç boşluk) ve 10px border-radius (köşe yuvarlatma) verin.",
-        startHtml: "<div class=\"kart\">\n  <h3>Profil</h3>\n  <p>Benim adım ProDev.</p>\n</div>",
+        startHtml: "<div class=\"kart\">\n  <h3>Profil</h3>\n  <p>Benim adım CodexA.</p>\n</div>",
         startCss: ".kart {\n  background-color: #3b82f6;\n  color: white;\n  width: 200px;\n  /* Kodlarınızı buraya ekleyin */\n}",
         startJs: "",
         validation: (html, css, js) => css.includes('padding:') && css.includes('20px') && css.includes('border-radius:') && css.includes('10px')
@@ -442,8 +431,6 @@
         startJs: "",
         validation: (html, css, js) => css.includes('display: flex') && css.includes('justify-content: center')
       },
-
-      // MODÜL 3: JAVASCRIPT PROGRAMLAMA
       {
         id: "js-01", category: "js", title: "JS'e Giriş ve Tıklama Yakalama", xp: 75,
         desc: "HTML ve CSS sitemizi oluşturdu, şimdi JavaScript ile ona ruh (hareket/mantık) katacağız. Sitedeki bir butonu 'document.querySelector' ile bulur ve 'addEventListener' ile tıklanmasını dinleriz.",
@@ -461,7 +448,7 @@
         startHtml: "<div class=\"kutu\">Rengim Değişecek!</div>\n<button id=\"renkBtn\">Rengi Değiştir</button>",
         startCss: ".kutu { width: 200px; height: 100px; background: gray; color: white; display:flex; align-items:center; justify-content:center; margin-bottom: 10px; transition: 0.3s; }",
         startJs: "const kutu = document.querySelector('.kutu');\nconst btn = document.querySelector('#renkBtn');\n\nbtn.addEventListener('click', () => {\n  // Kutunun arkaplan rengini mavi (blue) yapın\n  \n});",
-        validation: (html, css, js) => js.includes("kutu.style.backgroundColor") || js.includes("kutu.style.background") && js.includes("'blue'")
+        validation: (html, css, js) => (js.includes("kutu.style.backgroundColor") || js.includes("kutu.style.background")) && js.includes("'blue'")
       }
     ];
 
@@ -500,6 +487,7 @@
         const a = localStorage.getItem('prodev_academy'); if (a) state.academy = { ...state.academy, ...JSON.parse(a) };
         updateAcademyUI();
       };
+      
       const saveState = () => {
         localStorage.setItem('prodev_projects', JSON.stringify(state.projects));
         localStorage.setItem('prodev_settings', JSON.stringify(state.settings));
@@ -531,25 +519,33 @@
       const highlightCode = (type) => {
         const ta = document.getElementById(`edit-${type}`);
         const pre = document.getElementById(`highlight-${type}`);
+        
+        // Önce temel HTML sembollerini escape et
         let code = ta.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+        // RegEx çakışmalarını (nested regex bug) önlemek için geçici bir koruma katmanı:
+        const wrap = (cls, text) => `\uE000${cls}\uE001${text}\uE002`;
+
         if (type === 'html') {
-          code = code.replace(/(&lt;\/?[a-zA-Z0-9\-]+)(&gt;|\s)/g, '<span class="token tag">$1</span>$2');
-          code = code.replace(/([a-zA-Z\-]+)=("[^"]*")/g, '<span class="token attr-name">$1</span>=<span class="token attr-value">$2</span>');
-          code = code.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="token comment">$1</span>');
+          code = code.replace(/(&lt;\/?[a-zA-Z0-9\-]+)(&gt;|\s)/g, (m, p1, p2) => wrap('tag', p1) + p2);
+          code = code.replace(/([a-zA-Z\-]+)=("[^"]*")/g, (m, p1, p2) => wrap('attr-name', p1) + '=' + wrap('attr-value', p2));
+          code = code.replace(/(&lt;!--[\s\S]*?--&gt;)/g, m => wrap('comment', m));
         } else if (type === 'css') {
-          code = code.replace(/(\.[a-zA-Z0-9_\-]+|\#[a-zA-Z0-9_\-]+|[a-zA-Z0-9_\-]+)\s*\{/g, '<span class="token selector">$1</span> {');
-          code = code.replace(/([a-zA-Z\-]+)\s*:/g, '<span class="token property">$1</span>:');
-          code = code.replace(/(:\s*[^;\n]+)/g, '<span class="token string">$1</span>');
-          code = code.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="token comment">$1</span>');
+          code = code.replace(/(\.[a-zA-Z0-9_\-]+|\#[a-zA-Z0-9_\-]+|[a-zA-Z0-9_\-]+)\s*\{/g, (m, p1) => wrap('selector', p1) + ' {');
+          code = code.replace(/([a-zA-Z\-]+)\s*:/g, (m, p1) => wrap('property', p1) + ':');
+          code = code.replace(/(:\s*[^;\n]+)/g, m => wrap('string', m));
+          code = code.replace(/(\/\*[\s\S]*?\*\/)/g, m => wrap('comment', m));
         } else if (type === 'js') {
-          code = code.replace(/\b(const|let|var|function|return|if|else|for|while|switch|case|break|class|import|export|default|new|true|false|async|await)\b/g, '<span class="token keyword">$1</span>');
-          code = code.replace(/(['"`][^'"`]*['"`])/g, '<span class="token string">$1</span>');
-          code = code.replace(/\b([0-9]+)\b/g, '<span class="token number">$1</span>');
-          code = code.replace(/(\/\/.+)/g, '<span class="token comment">$1</span>');
-          code = code.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="token comment">$1</span>');
-          code = code.replace(/\b([a-zA-Z0-9_]+)(?=\()/g, '<span class="token function">$1</span>');
+          code = code.replace(/\b(const|let|var|function|return|if|else|for|while|switch|case|break|class|import|export|default|new|true|false|async|await)\b/g, m => wrap('keyword', m));
+          code = code.replace(/(['"`][^'"`]*['"`])/g, m => wrap('string', m));
+          code = code.replace(/\b([0-9]+)\b/g, m => wrap('number', m));
+          code = code.replace(/(\/\/.+)/g, m => wrap('comment', m));
+          code = code.replace(/(\/\*[\s\S]*?\*\/)/g, m => wrap('comment', m));
+          code = code.replace(/\b([a-zA-Z0-9_]+)(?=\()/g, m => wrap('function', m));
         }
+
+        // Son aşamada koruma katmanını gerçek HTML Span'lerine dönüştür
+        code = code.replace(/\uE000([a-zA-Z\-]+)\uE001/g, '<span class="token $1">').replace(/\uE002/g, '</span>');
 
         pre.innerHTML = code + "\n";
         
@@ -600,7 +596,6 @@
         document.getElementById('console-count').innerText = parseInt(document.getElementById('console-count').innerText) + 1;
       });
 
-      // YENİ: TAM EKRAN (FULLSCREEN) PREVIEW MANTIĞI
       const toggleFullscreenPreview = () => {
         const wrapper = document.getElementById('preview-wrapper');
         const isFullscreen = wrapper.classList.contains('fixed');
@@ -608,11 +603,11 @@
         if (isFullscreen) {
           wrapper.classList.remove('fixed', 'inset-0', 'z-[100]', 'bg-gray-900/95', 'backdrop-blur-sm');
           document.getElementById('exit-fullscreen-btn').classList.add('hidden');
-          document.body.style.overflow = ''; // Scroll'u geri aç
+          document.body.style.overflow = ''; 
         } else {
           wrapper.classList.add('fixed', 'inset-0', 'z-[100]', 'bg-gray-900/95', 'backdrop-blur-sm');
           document.getElementById('exit-fullscreen-btn').classList.remove('hidden');
-          document.body.style.overflow = 'hidden'; // Arkaplan scroll'unu kapat
+          document.body.style.overflow = 'hidden'; 
         }
       };
 
@@ -628,7 +623,6 @@
       const triggerUndo = () => document.execCommand('undo', false, null);
       const triggerRedo = () => document.execCommand('redo', false, null);
 
-      // YENİ NESİL AKADEMİ: PLAYGROUND ENTEGRASYONU
       const renderAcademyModules = () => {
         const container = document.getElementById('academy-modules-container');
         container.innerHTML = '';
@@ -682,13 +676,11 @@
         
         state.activeLessonId = lessonId;
         
-        // Scratchpad Projesine yükle
         state.projects['academy-scratchpad'] = { 
           id: 'academy-scratchpad', name: '🎓 Akademi Çalışma Alanı', 
           html: l.startHtml, css: l.startCss, js: l.startJs 
         };
         
-        // Arayüzü hazırla
         document.getElementById('lesson-bar-tag').innerText = l.category;
         document.getElementById('lesson-bar-title').innerText = l.title;
         document.getElementById('lesson-bar-desc').innerText = l.desc;
@@ -697,13 +689,11 @@
         document.getElementById('lesson-bar-xp').innerText = l.xp;
         document.getElementById('lesson-bar-feedback').innerText = '';
         
-        // Paneli Göster
         const bar = document.getElementById('academy-lesson-bar');
         bar.classList.remove('hidden');
         document.getElementById('lesson-bar-details').classList.remove('hidden');
         document.getElementById('lesson-bar-chevron').style.transform = 'rotate(180deg)';
 
-        // Playground'a Geç
         switchMainTab('play');
         loadProject('academy-scratchpad');
         showToast('Ders Playground\'a yüklendi. Kodu yazmaya başlayın!');
@@ -747,7 +737,6 @@
               updateAcademyUI();
             }
             
-            // 3 Saniye sonra paneli daralt ve başarı mesajı ver
             setTimeout(() => {
                document.getElementById('lesson-bar-details').classList.add('hidden');
                document.getElementById('lesson-bar-chevron').style.transform = 'rotate(0deg)';
@@ -767,7 +756,7 @@
       const exitLessonMode = () => {
         document.getElementById('academy-lesson-bar').classList.add('hidden');
         state.activeLessonId = null;
-        loadProject('ornek-proje'); // Ana projeye geri dön
+        loadProject('ornek-proje'); 
         showToast('Eğitim modundan çıkıldı.');
       };
 
@@ -780,7 +769,6 @@
       };
 
 
-      // DİĞER KÜÇÜK FONKSİYONLAR (AYARLAR & SÜRÜKLE BIRAK VB.)
       const dragResizeStart = (e, panelKey) => {
         state.drag.active = true; state.drag.panelKey = panelKey;
         state.drag.startY = e.clientY || e.touches[0].clientY;
@@ -808,7 +796,6 @@
                       "w-[1024px] max-w-full h-full rounded-lg shadow-md border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 relative mx-auto";
       };
 
-      // DEĞİŞİKLİK: AYARLAR GERÇEKTEN MENÜ İLE UYUMLU ÇALIŞIYOR
       const openSettings = () => {
         document.getElementById('modal-settings-fontsize').value = state.settings.fontSize || '14px';
         document.getElementById('modal-settings-autosave').checked = state.settings.autoSave !== false;
@@ -830,10 +817,9 @@
       const applyWordWrap = (c) => document.querySelectorAll('.editor-textarea, .editor-highlight').forEach(el => c ? el.classList.add('whitespace-pre-wrap') : el.classList.remove('whitespace-pre-wrap'));
       const toggleAutoSave = (c) => { state.settings.autoSave = c; saveState(); };
 
-      const triggerCodeAnalysis = () => { /* Mevcut Sağlık Raporu - Korundu */ document.getElementById('modal-health').classList.remove('hidden'); };
+      const triggerCodeAnalysis = () => { document.getElementById('modal-health').classList.remove('hidden'); };
       const closeHealth = () => document.getElementById('modal-health').classList.add('hidden');
 
-      // DEĞİŞİKLİK: İNDİRME MANTIĞI EKLENDİ
       const openDownloadModal = () => document.getElementById('modal-download').classList.remove('hidden');
       const closeDownloadModal = () => document.getElementById('modal-download').classList.add('hidden');
       
@@ -855,11 +841,11 @@
         const js = document.getElementById('edit-js').value;
 
         if (format === 'html-combined') {
-          const combinedCode = `<!DOCTYPE html>\n<html lang="tr">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>ProDev Export</title>\n  <style>\n${css}\n  </style>\n</head>\n<body>\n${html}\n\n  <script>\n${js}\n  <\/script>\n</body>\n</html>`;
+          const combinedCode = `<!DOCTYPE html>\n<html lang="tr">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>CodexA Export</title>\n  <style>\n${css}\n  </style>\n</head>\n<body>\n${html}\n\n  <script>\n${js}\n  <\/script>\n</body>\n</html>`;
           downloadFile('index.html', combinedCode, 'text/html');
           showToast('Tek dosya olarak başarıyla indirildi!');
         } else if (format === 'separate') {
-          const basicHtml = `<!DOCTYPE html>\n<html lang="tr">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>ProDev Export</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n${html}\n\n  <script src="script.js"><\/script>\n</body>\n</html>`;
+          const basicHtml = `<!DOCTYPE html>\n<html lang="tr">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>CodexA Export</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n${html}\n\n  <script src="script.js"><\/script>\n</body>\n</html>`;
           downloadFile('index.html', basicHtml, 'text/html');
           setTimeout(() => downloadFile('style.css', css, 'text/css'), 300);
           setTimeout(() => downloadFile('script.js', js, 'text/javascript'), 600);
@@ -879,7 +865,7 @@
         triggerFormat, triggerUndo, triggerRedo, toggleFullscreenPreview,
         triggerCodeAnalysis, closeHealth, dragResizeStart, togglePanelSize, minimizePanel, setDeviceMode, 
         openSettings, closeSettings, setTheme, setFontSize, toggleWordWrap, toggleAutoSave, 
-        openDownloadModal, closeDownloadModal, exportProject, // İndirme fonksiyonları
+        openDownloadModal, closeDownloadModal, exportProject,
         startLessonInPlayground, checkLessonInPlayground, exitLessonMode, toggleLessonDetails, showToast
       };
     })();
@@ -887,4 +873,5 @@
     window.addEventListener('DOMContentLoaded', App.init);
   </script>
 </body>
-</html> 
+</html>
+
