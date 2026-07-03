@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ProDev - HTML/CSS/JS Playground & Academy</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              900: '#1e3a8a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Google Fonts (Fira Code & Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: contain; user-select: none; }
+    .code-font { font-family: 'Fira Code', monospace; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.5); border-radius: 3px; }
+    .dark ::-webkit-scrollbar-thumb { background: rgba(75, 85, 99, 0.5); }
+    .editor-wrapper { position: relative; width: 100%; overflow: hidden; }
+    .editor-textarea { background: transparent; color: transparent; caret-color: #3b82f6; resize: none; outline: none; white-space: pre; overflow-wrap: normal; overflow-x: auto; tab-size: 4; user-select: text !important; -webkit-user-select: text !important; }
+    .dark .editor-textarea { caret-color: #60a5fa; }
+    .editor-highlight { pointer-events: none; white-space: pre; overflow-wrap: normal; overflow: hidden; }
+
+    /* Token Colors */
+    .token.keyword { color: #ff79c6; font-weight: bold; }
+    .token.string { color: #f1fa8c; }
+    .token.number { color: #bd93f9; }
+    .token.comment { color: #6272a4; font-style: italic; }
+    .token.tag { color: #ff5555; }
+    .token.attr-name { color: #50fa7b; }
+    .token.attr-value { color: #f1fa8c; }
+    .token.selector { color: #50fa7b; }
+    .token.property { color: #8be9fd; }
+    .token.function { color: #50fa7b; }
+    .light-theme .token.keyword { color: #0000ff; font-weight: bold; }
+    .light-theme .token.string { color: #a31515; }
+    .light-theme .token.number { color: #098658; }
+    .light-theme .token.comment { color: #008000; font-style: italic; }
+    .light-theme .token.tag { color: #800000; }
+    .light-theme .token.attr-name { color: #ff0000; }
+    .light-theme .token.attr-value { color: #0000ff; }
+    .light-theme .token.selector { color: #0000ff; }
+    .light-theme .token.property { color: #ff0000; }
+    .light-theme .token.function { color: #795e26; }
+    .amoled-theme { background-color: #000000 !important; }
+    
+    .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); }
+    .dark .glass-panel { background: rgba(17, 24, 39, 0.7); border: 1px solid rgba(255, 255, 255, 0.05); }
+    .touch-target { min-height: 44px; min-width: 44px; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 flex flex-col h-screen overflow-hidden transition-colors duration-200">
+
+  <!-- Üst Navigasyon -->
+  <header class="glass-panel sticky top-0 z-40 px-4 h-14 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 shrink-0">
+    <div class="flex items-center gap-2">
+      <div class="bg-blue-600 text-white p-1.5 rounded-lg"><i data-lucide="terminal" class="w-5 h-5"></i></div>
+      <span class="font-bold text-lg tracking-tight hidden sm:block">ProDev <span class="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 px-1.5 py-0.5 rounded ml-1 font-semibold">STUDIO</span></span>
+    </div>
+    
+    <div class="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+      <button id="btn-tab-play" onclick="App.switchMainTab('play')" class="px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 bg-white dark:bg-gray-700 shadow-sm transition-all duration-200">
+        <i data-lucide="code-2" class="w-3.5 h-3.5 text-blue-500"></i> Playground
+      </button>
+      <button id="btn-tab-learn" onclick="App.switchMainTab('learn')" class="px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all duration-200 relative">
+        <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i> Akademi
+        <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span></span>
+      </button>
+    </div>
+
+    <div class="flex items-center gap-1.5">
+      <button onclick="App.openSettings()" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg touch-target" title="Ayarlar"><i data-lucide="settings" class="w-5 h-5"></i></button>
+      <!-- DEĞİŞİKLİK: Dosya Yöneticisi butonu İndir Butonu ile değiştirildi -->
+      <button onclick="App.openDownloadModal()" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg touch-target" title="Projeyi İndir"><i data-lucide="download" class="w-5 h-5"></i></button>
+    </div>
+  </header>
+
+  <main class="flex-1 relative overflow-hidden flex flex-col">
+    
+    <!-- 1. OYNATMA ALANI (PLAYGROUND) -->
+    <div id="section-playground" class="absolute inset-0 flex flex-col">
+      
+      <!-- İNTERAKTİF AKADEMİ DERS PANELİ (Playground'a entegre) -->
+      <div id="academy-lesson-bar" class="hidden shrink-0 bg-blue-600 dark:bg-blue-900/40 border-b border-blue-500/30 text-white flex flex-col transition-all duration-300">
+        <div class="flex items-center justify-between px-4 py-2.5 cursor-pointer" onclick="App.toggleLessonDetails()">
+          <div class="flex items-center gap-2">
+            <span class="bg-blue-800 text-blue-100 text-[10px] font-bold px-2 py-0.5 rounded uppercase" id="lesson-bar-tag">HTML</span>
+            <h3 class="font-bold text-sm" id="lesson-bar-title">Ders Başlığı</h3>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-semibold text-yellow-300 flex items-center gap-1"><i data-lucide="award" class="w-3.5 h-3.5"></i> <span id="lesson-bar-xp">50</span> XP</span>
+            <i id="lesson-bar-chevron" data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-200"></i>
+          </div>
+        </div>
+        
+        <!-- Açılır/Kapanır Detay Alanı -->
+        <div id="lesson-bar-details" class="px-4 pb-4 hidden">
+          <div class="bg-black/20 rounded-xl p-3 text-xs leading-relaxed text-blue-50 mb-3" id="lesson-bar-desc">Ders açıklaması...</div>
+          <div class="bg-white/10 border-l-2 border-yellow-400 p-2.5 rounded text-xs text-yellow-100 mb-4" id="lesson-bar-tip">💡 İpucu: ...</div>
+          
+          <div class="bg-gray-900 rounded-xl p-4 border border-gray-700 shadow-inner">
+            <h4 class="text-xs font-bold text-gray-400 uppercase mb-2 flex items-center gap-1.5"><i data-lucide="target" class="w-4 h-4 text-green-400"></i> GÖREVİNİZ:</h4>
+            <p class="text-sm font-semibold text-white mb-4" id="lesson-bar-task">Editörde şunu yapın...</p>
+            <div class="flex items-center gap-2">
+              <button onclick="App.checkLessonInPlayground()" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-bold text-sm transition-colors flex items-center justify-center gap-2 shadow-lg shadow-green-900/20">
+                <i data-lucide="check-circle-2" class="w-4 h-4"></i> Kodu Kontrol Et ve Tamamla
+              </button>
+              <button onclick="App.exitLessonMode()" class="px-4 py-2 bg-red-500/20 hover:bg-red-500/40 text-red-100 rounded-lg text-sm font-semibold transition-colors" title="Dersten Çık">Çık</button>
+            </div>
+            <div id="lesson-bar-feedback" class="mt-2 text-xs font-semibold text-center"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editörler Bölümü -->
+      <div id="editors-container" class="flex-1 flex flex-col min-h-0 bg-gray-100 dark:bg-gray-950 overflow-y-auto">
+        <!-- HTML -->
+        <div id="panel-html" class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex flex-col shrink-0" style="height: 150px;">
+          <div class="h-9 px-3 bg-gray-50 dark:bg-gray-800/50 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 select-none cursor-row-resize" onmousedown="App.dragResizeStart(event, 'html')" ontouchstart="App.dragResizeStart(event, 'html')">
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500"></span><span class="text-xs font-semibold text-gray-500 dark:text-gray-400">HTML5</span></div>
+            <div class="flex items-center gap-1">
+              <button onclick="App.togglePanelSize('html')" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"><i data-lucide="maximize-2" class="w-3.5 h-3.5"></i></button>
+              <button onclick="App.minimizePanel('html')" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"><i data-lucide="minimize-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+          <div class="flex-1 flex overflow-hidden relative">
+            <div id="lines-html" class="w-10 bg-gray-50 dark:bg-gray-900/50 border-r border-gray-200 dark:border-gray-800 py-3 text-right pr-2 text-xs text-gray-400 font-mono overflow-hidden h-full"></div>
+            <div class="flex-1 relative h-full overflow-hidden">
+              <pre id="highlight-html" class="absolute inset-0 p-3 text-xs code-font editor-highlight whitespace-pre-wrap dark:text-gray-300 pointer-events-none z-10"></pre>
+              <textarea id="edit-html" class="absolute inset-0 w-full h-full p-3 text-xs code-font editor-textarea whitespace-pre-wrap focus:outline-none bg-transparent dark:text-transparent z-20" oninput="App.onEditorInput('html')" onscroll="App.syncScroll('html')" spellcheck="false"></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- CSS -->
+        <div id="panel-css" class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex flex-col shrink-0" style="height: 150px;">
+          <div class="h-9 px-3 bg-gray-50 dark:bg-gray-800/50 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 select-none cursor-row-resize" onmousedown="App.dragResizeStart(event, 'css')" ontouchstart="App.dragResizeStart(event, 'css')">
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span><span class="text-xs font-semibold text-gray-500 dark:text-gray-400">CSS3</span></div>
+            <div class="flex items-center gap-1">
+              <button onclick="App.togglePanelSize('css')" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"><i data-lucide="maximize-2" class="w-3.5 h-3.5"></i></button>
+              <button onclick="App.minimizePanel('css')" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"><i data-lucide="minimize-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+          <div class="flex-1 flex overflow-hidden relative">
+            <div id="lines-css" class="w-10 bg-gray-50 dark:bg-gray-900/50 border-r border-gray-200 dark:border-gray-800 py-3 text-right pr-2 text-xs text-gray-400 font-mono overflow-hidden h-full"></div>
+            <div class="flex-1 relative h-full overflow-hidden">
+              <pre id="highlight-css" class="absolute inset-0 p-3 text-xs code-font editor-highlight whitespace-pre-wrap dark:text-gray-300 pointer-events-none z-10"></pre>
+              <textarea id="edit-css" class="absolute inset-0 w-full h-full p-3 text-xs code-font editor-textarea whitespace-pre-wrap focus:outline-none bg-transparent dark:text-transparent z-20" oninput="App.onEditorInput('css')" onscroll="App.syncScroll('css')" spellcheck="false"></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- JS -->
+        <div id="panel-js" class="bg-white dark:bg-gray-900 flex flex-col shrink-0" style="height: 150px;">
+          <div class="h-9 px-3 bg-gray-50 dark:bg-gray-800/50 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 select-none cursor-row-resize" onmousedown="App.dragResizeStart(event, 'js')" ontouchstart="App.dragResizeStart(event, 'js')">
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-yellow-500"></span><span class="text-xs font-semibold text-gray-500 dark:text-gray-400">JS ES6</span></div>
+            <div class="flex items-center gap-1">
+              <button onclick="App.togglePanelSize('js')" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"><i data-lucide="maximize-2" class="w-3.5 h-3.5"></i></button>
+              <button onclick="App.minimizePanel('js')" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"><i data-lucide="minimize-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+          <div class="flex-1 flex overflow-hidden relative">
+            <div id="lines-js" class="w-10 bg-gray-50 dark:bg-gray-900/50 border-r border-gray-200 dark:border-gray-800 py-3 text-right pr-2 text-xs text-gray-400 font-mono overflow-hidden h-full"></div>
+            <div class="flex-1 relative h-full overflow-hidden">
+              <pre id="highlight-js" class="absolute inset-0 p-3 text-xs code-font editor-highlight whitespace-pre-wrap dark:text-gray-300 pointer-events-none z-10"></pre>
+              <textarea id="edit-js" class="absolute inset-0 w-full h-full p-3 text-xs code-font editor-textarea whitespace-pre-wrap focus:outline-none bg-transparent dark:text-transparent z-20" oninput="App.onEditorInput('js')" onscroll="App.syncScroll('js')" spellcheck="false"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ortak Araç Çubuğu (TAM EKRAN BUTONU EKLENDİ) -->
+      <div class="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 border-t border-b border-gray-200 dark:border-gray-700 flex items-center justify-between shrink-0 overflow-x-auto hide-scrollbar">
+        <div class="flex items-center gap-1 shrink-0">
+          <button onclick="App.triggerFormat()" class="px-2 py-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded text-xs font-semibold flex items-center gap-1 hover:bg-gray-50"><i data-lucide="sparkles" class="w-3 h-3 text-yellow-500"></i> <span class="hidden sm:inline">Formatla</span></button>
+          <button onclick="App.triggerUndo()" class="p-1.5 hover:bg-white dark:hover:bg-gray-700 rounded"><i data-lucide="undo" class="w-3.5 h-3.5"></i></button>
+          <button onclick="App.triggerRedo()" class="p-1.5 hover:bg-white dark:hover:bg-gray-700 rounded"><i data-lucide="redo" class="w-3.5 h-3.5"></i></button>
+          <button onclick="App.triggerCodeAnalysis()" class="px-2 py-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded text-xs font-semibold flex items-center gap-1 hover:bg-gray-50"><i data-lucide="heart-pulse" class="w-3 h-3 text-red-500"></i> Rapor <span id="health-score-badge" class="ml-1 bg-green-100 dark:bg-green-950 text-green-700 px-1 rounded text-[10px]">100</span></button>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0 ml-2">
+          <select id="device-selector" onchange="App.setDeviceMode(this.value)" class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded px-2 py-1 text-xs outline-none w-24">
+            <option value="full">Mobil</option>
+            <option value="tablet">Tablet</option>
+            <option value="desktop">PC</option>
+          </select>
+          <button onclick="App.hardRefreshPreview()" class="p-1.5 hover:bg-white dark:hover:bg-gray-700 rounded" title="Yenile"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i></button>
+          <!-- YENİ: TAM EKRAN BUTONU -->
+          <button onclick="App.toggleFullscreenPreview()" class="px-2 py-1 bg-blue-600 text-white rounded text-xs font-semibold flex items-center gap-1 hover:bg-blue-700 shadow-sm" title="Canlı Ekranı Tam Ekran Yap">
+            <i data-lucide="maximize" class="w-3.5 h-3.5"></i> Tam Ekran
+          </button>
+        </div>
+      </div>
+
+      <!-- PREVIEW ALANI -->
+      <div id="preview-section" class="flex-1 flex flex-col bg-white dark:bg-gray-900 relative">
+        <div id="preview-wrapper" class="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-950 p-2 overflow-hidden transition-all duration-300">
+          
+          <!-- YENİ: TAM EKRANDAN ÇIK BUTONU (Sadece tam ekranda görünür) -->
+          <button id="exit-fullscreen-btn" onclick="App.toggleFullscreenPreview()" class="hidden fixed top-4 right-4 z-[110] bg-gray-900/80 text-white px-4 py-2 rounded-full font-bold shadow-xl border border-gray-700 flex items-center gap-2 hover:bg-red-600 transition-colors backdrop-blur">
+            <i data-lucide="shrink" class="w-4 h-4"></i> Tam Ekrandan Çık
+          </button>
+
+          <div id="preview-container" class="w-full h-full rounded-lg shadow-md border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 relative">
+            <iframe id="iframe-preview" sandbox="allow-scripts allow-modals allow-same-origin" class="w-full h-full bg-white rounded-lg"></iframe>
+          </div>
+        </div>
+
+        <div id="console-drawer" class="absolute bottom-0 inset-x-0 bg-gray-950 text-gray-200 h-10 flex flex-col transition-all duration-300 border-t border-gray-800 z-30">
+          <div class="h-10 px-4 bg-gray-900 flex items-center justify-between cursor-pointer select-none border-b border-gray-800" onclick="App.toggleConsole()">
+            <div class="flex items-center gap-2">
+              <i data-lucide="terminal" class="w-4 h-4 text-green-400"></i>
+              <span class="text-xs font-semibold font-mono">Geliştirici Konsolu (<span id="console-count">0</span>)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="App.clearConsole(event)" class="px-2 py-0.5 hover:bg-gray-800 text-[10px] rounded border border-gray-700">Temizle</button>
+              <i id="console-chevron" data-lucide="chevron-up" class="w-4 h-4 transition-transform duration-300"></i>
+            </div>
+          </div>
+          <div id="console-logs" class="flex-1 overflow-y-auto p-3 space-y-1.5 font-mono text-xs text-green-300 select-text">
+            <div class="text-gray-500 italic">Konsol çıktısı yok...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ÖĞRENME PLATFORMU (AKADEMİ LİSTESİ) -->
+    <div id="section-academy" class="absolute inset-0 hidden flex flex-col bg-gray-50 dark:bg-gray-950 overflow-y-auto">
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-800 text-white p-6 shrink-0 shadow-lg relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 opacity-10"><i data-lucide="graduation-cap" class="w-48 h-48"></i></div>
+        <div class="flex items-center justify-between relative z-10">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center border-2 border-white/50 shadow-inner">
+              <i data-lucide="rocket" class="w-8 h-8 text-white"></i>
+            </div>
+            <div>
+              <h2 class="font-bold text-xl leading-tight">ProDev Akademi</h2>
+              <p class="text-sm text-blue-100 font-medium mt-0.5">Sıfırdan Uzmanlığa Kodlama Serüveni</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-blue-200 font-semibold tracking-wider uppercase">Seviye</div>
+            <div id="academy-level" class="text-4xl font-black leading-none">1</div>
+          </div>
+        </div>
+
+        <div class="mt-6 bg-black/25 p-4 rounded-xl border border-white/10 relative z-10 backdrop-blur-sm">
+          <div class="flex justify-between text-sm font-semibold mb-2">
+            <span>Öğrenme İlerlemesi (XP: <span id="academy-xp">0</span>)</span>
+            <span id="academy-progress-label">0%</span>
+          </div>
+          <div class="w-full bg-white/20 h-3 rounded-full overflow-hidden shadow-inner">
+            <div id="academy-progress-bar" class="bg-gradient-to-r from-green-400 to-emerald-400 h-full rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(52,211,153,0.5)]" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 md:p-6 flex-1 space-y-8 max-w-5xl mx-auto w-full">
+        <!-- Modüller dinamik olarak JavaScript tarafından oluşturulacak -->
+        <div id="academy-modules-container" class="space-y-8"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modallar ve Toast aynı kaldı (İstisna: Ayarlar ve Download Modal eklendi) -->
+  <div id="modal-health" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">... (İçerik gizlendi)</div>
+  
+  <!-- DEĞİŞİKLİK: GERÇEK AYARLAR MODALI EKLENDİ -->
+  <div id="modal-settings" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800 transform transition-transform">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+        <h3 class="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5"></i> Ayarlar</h3>
+        <button onclick="App.closeSettings()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 touch-target"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-5 space-y-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Tema Seçimi</label>
+          <div class="grid grid-cols-3 gap-3">
+            <button onclick="App.setTheme('light')" class="flex flex-col items-center gap-2 p-3 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-blue-500 dark:hover:border-blue-500 transition-colors bg-white text-gray-800">
+              <i data-lucide="sun" class="w-6 h-6 text-yellow-500"></i><span class="text-xs font-bold">Açık</span>
+            </button>
+            <button onclick="App.setTheme('dark')" class="flex flex-col items-center gap-2 p-3 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-blue-500 dark:hover:border-blue-500 transition-colors bg-gray-800 text-white">
+              <i data-lucide="moon" class="w-6 h-6 text-blue-400"></i><span class="text-xs font-bold">Karanlık</span>
+            </button>
+            <button onclick="App.setTheme('amoled')" class="flex flex-col items-center gap-2 p-3 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-blue-500 dark:hover:border-blue-500 transition-colors bg-black text-gray-300">
+              <i data-lucide="smartphone" class="w-6 h-6 text-purple-500"></i><span class="text-xs font-bold">AMOLED</span>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Yazı Tipi Boyutu</label>
+          <select id="modal-settings-fontsize" onchange="App.setFontSize(this.value)" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="12px">Küçük (12px)</option>
+            <option value="14px">Orta (14px)</option>
+            <option value="16px">Büyük (16px)</option>
+            <option value="18px">Çok Büyük (18px)</option>
+          </select>
+        </div>
+        <div class="space-y-4">
+          <label class="flex items-center justify-between cursor-pointer group">
+            <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 group-hover:text-blue-500 transition-colors">Otomatik Kaydetme</span>
+            <div class="relative">
+              <input type="checkbox" id="modal-settings-autosave" onchange="App.toggleAutoSave(this.checked)" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </div>
+          </label>
+          <label class="flex items-center justify-between cursor-pointer group">
+            <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 group-hover:text-blue-500 transition-colors">Satır Kaydırma (Word Wrap)</span>
+            <div class="relative">
+              <input type="checkbox" id="modal-settings-wordwrap" onchange="App.toggleWordWrap(this.checked)" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEĞİŞİKLİK: DOSYA YÖNETİCİSİ YERİNE GERÇEK İNDİRME MODALI EKLENDİ -->
+  <div id="modal-download" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800 transform transition-transform">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+        <h3 class="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2"><i data-lucide="download" class="w-5 h-5"></i> Projeyi İndir</h3>
+        <button onclick="App.closeDownloadModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 touch-target"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-5 space-y-4">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 font-medium">Kodlarınızı hangi formatta kaydetmek istiyorsunuz?</p>
+        
+        <button onclick="App.exportProject('html-combined')" class="w-full flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-400 transition-colors group">
+           <div class="flex items-center gap-4">
+             <div class="bg-blue-100 dark:bg-blue-900/50 p-2.5 rounded-lg text-blue-600 dark:text-blue-400"><i data-lucide="file-code-2" class="w-6 h-6"></i></div>
+             <div class="text-left">
+               <div class="font-bold text-sm text-gray-800 dark:text-gray-200">Tek Dosya Olarak İndir (Tavsiye Edilen)</div>
+               <div class="text-[11px] text-gray-500 mt-0.5">Tüm HTML, CSS ve JS birleşik olarak "index.html" içerisine kaydedilir.</div>
+             </div>
+           </div>
+           <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400 group-hover:text-blue-500"></i>
+        </button>
+
+        <button onclick="App.exportProject('separate')" class="w-full flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/20 hover:border-green-400 transition-colors group">
+           <div class="flex items-center gap-4">
+             <div class="bg-green-100 dark:bg-green-900/50 p-2.5 rounded-lg text-green-600 dark:text-green-400"><i data-lucide="files" class="w-6 h-6"></i></div>
+             <div class="text-left">
+               <div class="font-bold text-sm text-gray-800 dark:text-gray-200">Ayrı Dosyalar Olarak İndir</div>
+               <div class="text-[11px] text-gray-500 mt-0.5">index.html, style.css ve script.js üç ayrı dosya halinde indirilir.</div>
+             </div>
+           </div>
+           <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400 group-hover:text-green-500"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-gray-900 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none transform translate-y-2"></div>
+
+  <script>
+    // ----------------------------------------------------
+    // YENİ NESİL İNTERAKTİF EĞİTİM MÜFREDATI (0'dan Uzmanlığa)
+    // ----------------------------------------------------
+    const LessonsDB = [
+      // MODÜL 1: HTML MİMARİSİ
+      {
+        id: "html-01", category: "html", title: "İlk Sayfanı Oluştur", xp: 50,
+        desc: "Web siteleri HTML etiketlerinden (tags) oluşur. Her sayfa genellikle bir <h1> (Ana Başlık) ve <p> (Paragraf) etiketi barındırır. Etiketler küçüktür/büyüktür işaretleri (< >) arasına yazılır.",
+        tip: "Açtığınız her etiketi '/' işaretiyle kapatmayı unutmayın. Örn: <p>Merhaba</p>",
+        taskDesc: "Editörde bulunan HTML koduna bir <h1> etiketi ekleyin ve içine 'Merhaba Dünya' yazın.",
+        startHtml: "<!-- Kodunuzu buraya yazın -->\n\n",
+        startCss: "body { font-family: sans-serif; background: #f0f0f0; padding: 20px; text-align: center; }",
+        startJs: "",
+        validation: (html, css, js) => html.toLowerCase().includes('<h1>') && html.toLowerCase().includes('merhaba dünya') && html.toLowerCase().includes('</h1>')
+      },
+      {
+        id: "html-02", category: "html", title: "Resim Eklemek", xp: 50,
+        desc: "Sayfaya resim eklemek için <img> etiketi kullanılır. Bu etiket kendi kendini kapatır (</img > yazılmaz!). 'src' (source) niteliği ile resmin internet adresini belirtiriz.",
+        tip: "Görsellerde her zaman 'alt' (alternatif metin) kullanmalısınız. Arama motorları resmin ne olduğunu 'alt' metninden okur.",
+        taskDesc: "Aşağıdaki koda bir img etiketi ekleyin. src değerini 'https://picsum.photos/200' ve alt değerini 'Manzara' yapın.",
+        startHtml: "<h1>Güzel Bir Manzara</h1>\n<!-- Resmi buraya ekle -->\n",
+        startCss: "body { text-align: center; font-family: sans-serif; } img { border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }",
+        startJs: "",
+        validation: (html, css, js) => html.includes('<img') && html.includes('src="https://picsum.photos/200"') && html.includes('alt=')
+      },
+      {
+        id: "html-03", category: "html", title: "Bağlantılar ve Butonlar", xp: 50,
+        desc: "Başka sayfalara gitmek için <a> (Anchor - Çapa) etiketi kullanılır. 'href' niteliği ile gidilecek adres verilir. Eğer yeni sekmede açılmasını istiyorsanız target=\"_blank\" eklenir.",
+        taskDesc: "HTML koduna Google'a giden (href='https://google.com') bir bağlantı (<a>) ekleyin. Metni 'Google'a Git' olsun.",
+        startHtml: "<h3>Arama Motorları</h3>\n<!-- Linki buraya ekle -->\n",
+        startCss: "a { padding: 10px 20px; background: blue; color: white; text-decoration: none; border-radius: 5px; }",
+        startJs: "",
+        validation: (html, css, js) => html.includes('<a') && html.includes('href="https://google.com"') && html.toLowerCase().includes('google\'a git') && html.includes('</a>')
+      },
+      
+      // MODÜL 2: CSS TASARIM UZMANLIĞI
+      {
+        id: "css-01", category: "css", title: "Renkler ve Seçiciler", xp: 50,
+        desc: "CSS, HTML elemanlarını seçip onlara stil vermemizi sağlar. Seçmek için HTML'e 'class' niteliği ekleriz. CSS dosyasında class'ları (.) nokta işareti ile seçeriz.",
+        tip: "Yazı rengi için 'color', arkaplan rengi için 'background-color' kullanılır.",
+        taskDesc: "CSS editörüne geçin. '.kutu' sınıfını seçin, arkaplanını (background-color) siyah (black), yazı rengini (color) beyaz (white) yapın.",
+        startHtml: "<div class=\"kutu\">\n  <h2>Ben bir kutuyum</h2>\n</div>",
+        startCss: "/* CSS kodunu buraya yazın */\n",
+        startJs: "",
+        validation: (html, css, js) => css.includes('.kutu') && css.includes('background-color') && (css.includes('black') || css.includes('#000')) && css.includes('color')
+      },
+      {
+        id: "css-02", category: "css", title: "Kutu Modeli (Box Model)", xp: 75,
+        desc: "HTML'deki her şey bir kutudur. Kutu içindeki yazıyla kenarlık arasındaki boşluğa 'padding', kutunun dışındaki diğer elementlerle olan boşluğuna 'margin' denir.",
+        tip: "padding: 20px; yazarak içeriği 4 taraftan şişirip ferahlatabilirsiniz.",
+        taskDesc: "'.kart' sınıfına 20px padding (iç boşluk) ve 10px border-radius (köşe yuvarlatma) verin.",
+        startHtml: "<div class=\"kart\">\n  <h3>Profil</h3>\n  <p>Benim adım ProDev.</p>\n</div>",
+        startCss: ".kart {\n  background-color: #3b82f6;\n  color: white;\n  width: 200px;\n  /* Kodlarınızı buraya ekleyin */\n}",
+        startJs: "",
+        validation: (html, css, js) => css.includes('padding:') && css.includes('20px') && css.includes('border-radius:') && css.includes('10px')
+      },
+      {
+        id: "css-03", category: "css", title: "Flexbox ile Modern Hizalama", xp: 100,
+        desc: "Elemanları yan yana dizmek ve ortalamak eskiden çok zordu. Artık ebeveyn (parent) kutuya 'display: flex' vererek içindekileri kusursuzca hizalayabiliyoruz.",
+        tip: "justify-content yatayda, align-items dikeyde hizalar.",
+        taskDesc: "'.container' sınıfına display: flex; ve justify-content: center; ekleyerek içindeki kutuları yatayda ortalayın.",
+        startHtml: "<div class=\"container\">\n  <div class=\"item\">1</div>\n  <div class=\"item\">2</div>\n</div>",
+        startCss: ".container {\n  background: #ddd;\n  height: 200px;\n  /* Kodu buraya ekle */\n}\n.item { background: red; color: white; padding: 20px; margin: 5px; }",
+        startJs: "",
+        validation: (html, css, js) => css.includes('display: flex') && css.includes('justify-content: center')
+      },
+
+      // MODÜL 3: JAVASCRIPT PROGRAMLAMA
+      {
+        id: "js-01", category: "js", title: "JS'e Giriş ve Tıklama Yakalama", xp: 75,
+        desc: "HTML ve CSS sitemizi oluşturdu, şimdi JavaScript ile ona ruh (hareket/mantık) katacağız. Sitedeki bir butonu 'document.querySelector' ile bulur ve 'addEventListener' ile tıklanmasını dinleriz.",
+        tip: "Konsola mesaj yazdırmak (console.log) kodunuzun çalışıp çalışmadığını test etmenin en iyi yoludur.",
+        taskDesc: "JavaScript editörüne geçin. id'si 'btn' olan butona tıklandığında konsola 'Tıklandı' yazdıran bir dinleyici ekleyin.",
+        startHtml: "<button id=\"btn\">Bana Tıkla</button>",
+        startCss: "button { padding: 15px; font-size: 16px; cursor: pointer; }",
+        startJs: "const buton = document.querySelector('#btn');\n\n// Dinleyici kodunu (addEventListener) buraya yazın\n",
+        validation: (html, css, js) => js.includes("addEventListener") && js.includes("'click'") && js.includes("console.log")
+      },
+      {
+        id: "js-02", category: "js", title: "DOM Manipülasyonu (Stil Değiştirme)", xp: 100,
+        desc: "JavaScript kullanarak HTML elemanlarının stillerini (CSS) canlı olarak değiştirebiliriz. eleman.style.backgroundColor = 'red' gibi.",
+        taskDesc: "Butona tıklandığında '.kutu' class'lı div'in arka plan rengini (backgroundColor) 'blue' yapacak JavaScript kodunu fonksiyonun içine yazın.",
+        startHtml: "<div class=\"kutu\">Rengim Değişecek!</div>\n<button id=\"renkBtn\">Rengi Değiştir</button>",
+        startCss: ".kutu { width: 200px; height: 100px; background: gray; color: white; display:flex; align-items:center; justify-content:center; margin-bottom: 10px; transition: 0.3s; }",
+        startJs: "const kutu = document.querySelector('.kutu');\nconst btn = document.querySelector('#renkBtn');\n\nbtn.addEventListener('click', () => {\n  // Kutunun arkaplan rengini mavi (blue) yapın\n  \n});",
+        validation: (html, css, js) => js.includes("kutu.style.backgroundColor") || js.includes("kutu.style.background") && js.includes("'blue'")
+      }
+    ];
+
+    const App = (() => {
+      let state = {
+        activeMainTab: 'play',
+        currentProjectId: 'academy-scratchpad',
+        projects: {
+          "ornek-proje": { id: "ornek-proje", name: "🎉 İlk Projem", html: `<h1>Merhaba Dünya</h1>`, css: `body { padding: 2rem; text-align: center; font-family: sans-serif; }`, js: `console.log("Hoş geldin!");` },
+          "academy-scratchpad": { id: "academy-scratchpad", name: "🎓 Akademi Çalışma Alanı", html: ``, css: ``, js: `` }
+        },
+        activeLessonId: null,
+        settings: { theme: 'dark', fontSize: '14px', wordWrap: true, autoSave: true },
+        academy: { xp: 0, level: 1, completedLessons: [] },
+        drag: { active: false, panelKey: null, startY: 0, startHeight: 0 }
+      };
+
+      let previewTimeout = null;
+
+      const init = () => {
+        loadState();
+        lucide.createIcons();
+        if(!state.projects['academy-scratchpad']) {
+          state.projects['academy-scratchpad'] = { id: "academy-scratchpad", name: "🎓 Akademi Çalışma Alanı", html: ``, css: ``, js: `` };
+        }
+        
+        loadProject(state.currentProjectId);
+        renderAcademyModules();
+        applySettings();
+        updatePreview();
+      };
+
+      const loadState = () => {
+        const p = localStorage.getItem('prodev_projects'); if (p) state.projects = JSON.parse(p);
+        const s = localStorage.getItem('prodev_settings'); if (s) state.settings = { ...state.settings, ...JSON.parse(s) };
+        const a = localStorage.getItem('prodev_academy'); if (a) state.academy = { ...state.academy, ...JSON.parse(a) };
+        updateAcademyUI();
+      };
+      const saveState = () => {
+        localStorage.setItem('prodev_projects', JSON.stringify(state.projects));
+        localStorage.setItem('prodev_settings', JSON.stringify(state.settings));
+        localStorage.setItem('prodev_academy', JSON.stringify(state.academy));
+      };
+
+      const switchMainTab = (tab) => {
+        state.activeMainTab = tab;
+        document.getElementById('section-playground').classList.toggle('hidden', tab !== 'play');
+        document.getElementById('section-academy').classList.toggle('hidden', tab !== 'learn');
+        
+        document.getElementById('btn-tab-play').className = tab === 'play' ? "px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 bg-white dark:bg-gray-700 shadow-sm transition-all duration-200" : "px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all duration-200";
+        document.getElementById('btn-tab-learn').className = tab === 'learn' ? "px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 bg-white dark:bg-gray-700 shadow-sm transition-all duration-200" : "px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all duration-200 relative";
+        
+        if (tab === 'play') updatePreview();
+        else renderAcademyModules();
+      };
+
+      const loadProject = (id) => {
+        const proj = state.projects[id];
+        if (!proj) return;
+        state.currentProjectId = id;
+        document.getElementById('edit-html').value = proj.html;
+        document.getElementById('edit-css').value = proj.css;
+        document.getElementById('edit-js').value = proj.js;
+        ['html', 'css', 'js'].forEach(highlightCode);
+      };
+
+      const highlightCode = (type) => {
+        const ta = document.getElementById(`edit-${type}`);
+        const pre = document.getElementById(`highlight-${type}`);
+        let code = ta.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        if (type === 'html') {
+          code = code.replace(/(&lt;\/?[a-zA-Z0-9\-]+)(&gt;|\s)/g, '<span class="token tag">$1</span>$2');
+          code = code.replace(/([a-zA-Z\-]+)=("[^"]*")/g, '<span class="token attr-name">$1</span>=<span class="token attr-value">$2</span>');
+          code = code.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="token comment">$1</span>');
+        } else if (type === 'css') {
+          code = code.replace(/(\.[a-zA-Z0-9_\-]+|\#[a-zA-Z0-9_\-]+|[a-zA-Z0-9_\-]+)\s*\{/g, '<span class="token selector">$1</span> {');
+          code = code.replace(/([a-zA-Z\-]+)\s*:/g, '<span class="token property">$1</span>:');
+          code = code.replace(/(:\s*[^;\n]+)/g, '<span class="token string">$1</span>');
+          code = code.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="token comment">$1</span>');
+        } else if (type === 'js') {
+          code = code.replace(/\b(const|let|var|function|return|if|else|for|while|switch|case|break|class|import|export|default|new|true|false|async|await)\b/g, '<span class="token keyword">$1</span>');
+          code = code.replace(/(['"`][^'"`]*['"`])/g, '<span class="token string">$1</span>');
+          code = code.replace(/\b([0-9]+)\b/g, '<span class="token number">$1</span>');
+          code = code.replace(/(\/\/.+)/g, '<span class="token comment">$1</span>');
+          code = code.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="token comment">$1</span>');
+          code = code.replace(/\b([a-zA-Z0-9_]+)(?=\()/g, '<span class="token function">$1</span>');
+        }
+
+        pre.innerHTML = code + "\n";
+        
+        const lines = ta.value.split('\n').length;
+        document.getElementById(`lines-${type}`).innerHTML = Array.from({length: lines}, (_, i) => `<div>${i + 1}</div>`).join('');
+      };
+
+      const syncScroll = (type) => {
+        const ta = document.getElementById(`edit-${type}`);
+        document.getElementById(`highlight-${type}`).scrollTop = ta.scrollTop;
+        document.getElementById(`highlight-${type}`).scrollLeft = ta.scrollLeft;
+        document.getElementById(`lines-${type}`).scrollTop = ta.scrollTop;
+      };
+
+      const onEditorInput = (type) => {
+        highlightCode(type);
+        if (state.settings.autoSave) {
+          state.projects[state.currentProjectId][type] = document.getElementById(`edit-${type}`).value;
+          saveState();
+        }
+        clearTimeout(previewTimeout);
+        previewTimeout = setTimeout(updatePreview, 350);
+      };
+
+      const updatePreview = () => {
+        const html = document.getElementById('edit-html').value, css = document.getElementById('edit-css').value, js = document.getElementById('edit-js').value;
+        const iframe = document.getElementById('iframe-preview');
+        
+        const injectConsoleCapture = `<script>
+          (function() {
+            const _log = console.log, _error = console.error;
+            window.onerror = function(msg, src, line) { window.parent.postMessage({type: 'error', message: msg, line: line}, '*'); return false; };
+            console.log = function(...args) { _log.apply(console, args); window.parent.postMessage({type: 'log', text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ')}, '*'); };
+            console.error = function(...args) { _error.apply(console, args); window.parent.postMessage({type: 'error', message: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ')}, '*'); };
+          })();
+        <\/script>`;
+        iframe.srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>${css}</style>${injectConsoleCapture}</head><body>${html}<script>try { ${js} } catch(err) { window.parent.postMessage({type: 'error', message: err.message}, '*'); }<\/script></body></html>`;
+      };
+
+      window.addEventListener('message', (event) => {
+        if (!event.data.type) return;
+        const logs = document.getElementById('console-logs');
+        if (logs.innerHTML.includes('Konsol çıktısı yok')) logs.innerHTML = '';
+        const d = document.createElement('div');
+        d.className = event.data.type === 'error' ? 'border-b border-gray-900 py-1 flex items-start gap-2 text-red-400' : 'border-b border-gray-900 py-1 flex items-start gap-2';
+        d.innerHTML = event.data.type === 'error' ? `<span class="text-red-500 font-bold shrink-0">⚠️</span><span class="break-all">Hata: ${event.data.message}</span>` : `<span class="text-blue-400 font-bold shrink-0">➔</span><span class="break-all">${event.data.text}</span>`;
+        logs.appendChild(d); logs.scrollTop = logs.scrollHeight;
+        document.getElementById('console-count').innerText = parseInt(document.getElementById('console-count').innerText) + 1;
+      });
+
+      // YENİ: TAM EKRAN (FULLSCREEN) PREVIEW MANTIĞI
+      const toggleFullscreenPreview = () => {
+        const wrapper = document.getElementById('preview-wrapper');
+        const isFullscreen = wrapper.classList.contains('fixed');
+        
+        if (isFullscreen) {
+          wrapper.classList.remove('fixed', 'inset-0', 'z-[100]', 'bg-gray-900/95', 'backdrop-blur-sm');
+          document.getElementById('exit-fullscreen-btn').classList.add('hidden');
+          document.body.style.overflow = ''; // Scroll'u geri aç
+        } else {
+          wrapper.classList.add('fixed', 'inset-0', 'z-[100]', 'bg-gray-900/95', 'backdrop-blur-sm');
+          document.getElementById('exit-fullscreen-btn').classList.remove('hidden');
+          document.body.style.overflow = 'hidden'; // Arkaplan scroll'unu kapat
+        }
+      };
+
+      const clearConsole = (e) => { if(e) e.stopPropagation(); document.getElementById('console-logs').innerHTML = `<div class="text-gray-500 italic">Konsol çıktısı yok...</div>`; document.getElementById('console-count').innerText = '0'; };
+      const toggleConsole = () => {
+        const drawer = document.getElementById('console-drawer'), chevron = document.getElementById('console-chevron');
+        if (drawer.style.height === '200px') { drawer.style.height = '40px'; chevron.style.transform = 'rotate(0deg)'; } 
+        else { drawer.style.height = '200px'; chevron.style.transform = 'rotate(180deg)'; }
+      };
+
+      const hardRefreshPreview = () => { clearConsole(); updatePreview(); showToast('Preview yenilendi!'); };
+      const triggerFormat = () => showToast('Formatlama şu an aktif değil.');
+      const triggerUndo = () => document.execCommand('undo', false, null);
+      const triggerRedo = () => document.execCommand('redo', false, null);
+
+      // YENİ NESİL AKADEMİ: PLAYGROUND ENTEGRASYONU
+      const renderAcademyModules = () => {
+        const container = document.getElementById('academy-modules-container');
+        container.innerHTML = '';
+        
+        const modules = [
+          { id: 'html', title: 'Modül 1: HTML Mimarisi', icon: 'html5', color: 'text-red-500' },
+          { id: 'css', title: 'Modül 2: CSS Tasarım Uzmanlığı', icon: 'palette', color: 'text-blue-500' },
+          { id: 'js', title: 'Modül 3: JavaScript Programlama', icon: 'cpu', color: 'text-yellow-500' }
+        ];
+
+        modules.forEach(mod => {
+          const modLessons = LessonsDB.filter(l => l.category === mod.id);
+          let html = `
+            <div>
+              <h3 class="font-bold text-lg tracking-wide text-gray-800 dark:text-gray-200 uppercase mb-4 flex items-center gap-2 border-b border-gray-200 dark:border-gray-800 pb-2">
+                <i data-lucide="${mod.icon}" class="w-6 h-6 ${mod.color}"></i> ${mod.title}
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          `;
+          
+          modLessons.forEach((l, index) => {
+            const isCompleted = state.academy.completedLessons.includes(l.id);
+            html += `
+              <div class="bg-white dark:bg-gray-900 border ${isCompleted ? 'border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'border-gray-200 dark:border-gray-800'} p-5 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+                <div>
+                  <span class="text-[10px] font-black tracking-wider text-blue-500 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded">ADIM ${index + 1}</span>
+                  <h4 class="font-bold text-base text-gray-900 dark:text-gray-100 mt-2 group-hover:text-blue-500 transition-colors">${l.title}</h4>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">${l.desc}</p>
+                </div>
+                <div class="flex items-center justify-between mt-5">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 px-2 py-1 rounded font-bold flex items-center gap-1"><i data-lucide="award" class="w-3.5 h-3.5"></i> ${l.xp} XP</span>
+                    ${isCompleted ? '<span class="text-xs text-green-600 dark:text-green-400 font-bold bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded"><i data-lucide="check" class="w-3.5 h-3.5 inline"></i> Bitti</span>' : ''}
+                  </div>
+                  <button onclick="App.startLessonInPlayground('${l.id}')" class="px-4 py-2 ${isCompleted ? 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300' : 'bg-blue-600 text-white hover:bg-blue-700'} font-bold rounded-xl text-xs flex items-center gap-1.5 transition-colors shadow-sm">
+                    ${isCompleted ? 'Tekrar Et' : 'Öğrenmeye Başla'} <i data-lucide="play" class="w-3 h-3 fill-current"></i>
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+          html += `</div></div>`;
+          container.innerHTML += html;
+        });
+        lucide.createIcons();
+      };
+
+      const startLessonInPlayground = (lessonId) => {
+        const l = LessonsDB.find(item => item.id === lessonId);
+        if (!l) return;
+        
+        state.activeLessonId = lessonId;
+        
+        // Scratchpad Projesine yükle
+        state.projects['academy-scratchpad'] = { 
+          id: 'academy-scratchpad', name: '🎓 Akademi Çalışma Alanı', 
+          html: l.startHtml, css: l.startCss, js: l.startJs 
+        };
+        
+        // Arayüzü hazırla
+        document.getElementById('lesson-bar-tag').innerText = l.category;
+        document.getElementById('lesson-bar-title').innerText = l.title;
+        document.getElementById('lesson-bar-desc').innerText = l.desc;
+        document.getElementById('lesson-bar-tip').innerText = l.tip;
+        document.getElementById('lesson-bar-task').innerText = l.taskDesc;
+        document.getElementById('lesson-bar-xp').innerText = l.xp;
+        document.getElementById('lesson-bar-feedback').innerText = '';
+        
+        // Paneli Göster
+        const bar = document.getElementById('academy-lesson-bar');
+        bar.classList.remove('hidden');
+        document.getElementById('lesson-bar-details').classList.remove('hidden');
+        document.getElementById('lesson-bar-chevron').style.transform = 'rotate(180deg)';
+
+        // Playground'a Geç
+        switchMainTab('play');
+        loadProject('academy-scratchpad');
+        showToast('Ders Playground\'a yüklendi. Kodu yazmaya başlayın!');
+      };
+
+      const toggleLessonDetails = () => {
+        const details = document.getElementById('lesson-bar-details');
+        const chev = document.getElementById('lesson-bar-chevron');
+        if(details.classList.contains('hidden')){
+          details.classList.remove('hidden'); chev.style.transform = 'rotate(180deg)';
+        } else {
+          details.classList.add('hidden'); chev.style.transform = 'rotate(0deg)';
+        }
+      };
+
+      const checkLessonInPlayground = () => {
+        const l = LessonsDB.find(item => item.id === state.activeLessonId);
+        if (!l) return;
+
+        const html = document.getElementById('edit-html').value;
+        const css = document.getElementById('edit-css').value;
+        const js = document.getElementById('edit-js').value;
+        
+        const fb = document.getElementById('lesson-bar-feedback');
+
+        try {
+          const isCorrect = l.validation(html, css, js);
+          if (isCorrect) {
+            fb.className = "mt-3 text-sm font-bold text-green-300 bg-green-900/30 p-2 rounded";
+            fb.innerHTML = `🎉 Mükemmel! Görevi başarıyla tamamladınız.`;
+            
+            if (!state.academy.completedLessons.includes(l.id)) {
+              state.academy.completedLessons.push(l.id);
+              state.academy.xp += l.xp;
+              const newLvl = Math.floor(state.academy.xp / 100) + 1;
+              if (newLvl > state.academy.level) {
+                state.academy.level = newLvl;
+                showToast(`🏆 SEVİYE ATLADIN! Yeni Seviye: ${newLvl}`);
+              }
+              saveState();
+              updateAcademyUI();
+            }
+            
+            // 3 Saniye sonra paneli daralt ve başarı mesajı ver
+            setTimeout(() => {
+               document.getElementById('lesson-bar-details').classList.add('hidden');
+               document.getElementById('lesson-bar-chevron').style.transform = 'rotate(0deg)';
+               showToast('Dersi tamamladınız! Akademiye dönüp yenisini seçebilirsiniz.');
+            }, 3000);
+
+          } else {
+            fb.className = "mt-3 text-sm font-bold text-red-300 bg-red-900/30 p-2 rounded";
+            fb.innerHTML = `⚠️ Kodunuzda eksiklikler var. Lütfen görevi ve yazdıklarınızı tekrar kontrol edin.`;
+          }
+        } catch(e) {
+          fb.className = "mt-3 text-sm font-bold text-red-300 bg-red-900/30 p-2 rounded";
+          fb.innerHTML = `⚠️ Bir hata oluştu: Kodunuzu kontrol edin.`;
+        }
+      };
+
+      const exitLessonMode = () => {
+        document.getElementById('academy-lesson-bar').classList.add('hidden');
+        state.activeLessonId = null;
+        loadProject('ornek-proje'); // Ana projeye geri dön
+        showToast('Eğitim modundan çıkıldı.');
+      };
+
+      const updateAcademyUI = () => {
+        document.getElementById('academy-xp').innerText = state.academy.xp;
+        document.getElementById('academy-level').innerText = state.academy.level;
+        const ratio = Math.min(100, Math.floor((state.academy.completedLessons.length / LessonsDB.length) * 100)) || 0;
+        document.getElementById('academy-progress-label').innerText = `${ratio}%`;
+        document.getElementById('academy-progress-bar').style.width = `${ratio}%`;
+      };
+
+
+      // DİĞER KÜÇÜK FONKSİYONLAR (AYARLAR & SÜRÜKLE BIRAK VB.)
+      const dragResizeStart = (e, panelKey) => {
+        state.drag.active = true; state.drag.panelKey = panelKey;
+        state.drag.startY = e.clientY || e.touches[0].clientY;
+        state.drag.startHeight = document.getElementById(`panel-${panelKey}`).offsetHeight;
+        document.addEventListener('mousemove', dragResizeMove); document.addEventListener('mouseup', dragResizeEnd);
+        document.addEventListener('touchmove', dragResizeMove, {passive: false}); document.addEventListener('touchend', dragResizeEnd);
+      };
+      const dragResizeMove = (e) => {
+        if (!state.drag.active) return;
+        const delta = (e.clientY || e.touches[0].clientY) - state.drag.startY;
+        document.getElementById(`panel-${state.drag.panelKey}`).style.height = `${Math.max(40, state.drag.startHeight + delta)}px`;
+      };
+      const dragResizeEnd = () => {
+        state.drag.active = false;
+        document.removeEventListener('mousemove', dragResizeMove); document.removeEventListener('mouseup', dragResizeEnd);
+        document.removeEventListener('touchmove', dragResizeMove); document.removeEventListener('touchend', dragResizeEnd);
+      };
+      const togglePanelSize = (p) => { const el = document.getElementById(`panel-${p}`); el.style.height = el.style.height === '300px' ? '150px' : '300px'; };
+      const minimizePanel = (p) => document.getElementById(`panel-${p}`).style.height = '40px';
+      
+      const setDeviceMode = (val) => {
+        const c = document.getElementById('preview-container');
+        c.className = val === 'full' ? "w-full h-full rounded-lg shadow-md border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 relative" :
+                      val === 'tablet' ? "w-[768px] max-w-full h-full rounded-lg shadow-md border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 relative mx-auto" :
+                      "w-[1024px] max-w-full h-full rounded-lg shadow-md border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 relative mx-auto";
+      };
+
+      // DEĞİŞİKLİK: AYARLAR GERÇEKTEN MENÜ İLE UYUMLU ÇALIŞIYOR
+      const openSettings = () => {
+        document.getElementById('modal-settings-fontsize').value = state.settings.fontSize || '14px';
+        document.getElementById('modal-settings-autosave').checked = state.settings.autoSave !== false;
+        document.getElementById('modal-settings-wordwrap').checked = state.settings.wordWrap !== false;
+        document.getElementById('modal-settings').classList.remove('hidden');
+      };
+      const closeSettings = () => document.getElementById('modal-settings').classList.add('hidden');
+      const applySettings = () => { applyTheme(state.settings.theme); applyFontSize(state.settings.fontSize); applyWordWrap(state.settings.wordWrap); };
+      const setTheme = (t) => { state.settings.theme = t; saveState(); applyTheme(t); };
+      const applyTheme = (t) => {
+        document.body.classList.remove('dark', 'amoled-theme'); document.querySelectorAll('.editor-wrapper').forEach(e => e.classList.remove('light-theme'));
+        if (t === 'dark') document.body.classList.add('dark');
+        if (t === 'amoled') document.body.classList.add('dark', 'amoled-theme');
+        if (t === 'light') document.querySelectorAll('.editor-wrapper').forEach(e => e.classList.add('light-theme'));
+      };
+      const setFontSize = (s) => { state.settings.fontSize = s; saveState(); applyFontSize(s); };
+      const applyFontSize = (s) => document.querySelectorAll('.editor-textarea, .editor-highlight').forEach(el => el.style.fontSize = s);
+      const toggleWordWrap = (c) => { state.settings.wordWrap = c; saveState(); applyWordWrap(c); };
+      const applyWordWrap = (c) => document.querySelectorAll('.editor-textarea, .editor-highlight').forEach(el => c ? el.classList.add('whitespace-pre-wrap') : el.classList.remove('whitespace-pre-wrap'));
+      const toggleAutoSave = (c) => { state.settings.autoSave = c; saveState(); };
+
+      const triggerCodeAnalysis = () => { /* Mevcut Sağlık Raporu - Korundu */ document.getElementById('modal-health').classList.remove('hidden'); };
+      const closeHealth = () => document.getElementById('modal-health').classList.add('hidden');
+
+      // DEĞİŞİKLİK: İNDİRME MANTIĞI EKLENDİ
+      const openDownloadModal = () => document.getElementById('modal-download').classList.remove('hidden');
+      const closeDownloadModal = () => document.getElementById('modal-download').classList.add('hidden');
+      
+      const downloadFile = (filename, content, type) => {
+        const blob = new Blob([content], { type: type });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      };
+
+      const exportProject = (format) => {
+        const html = document.getElementById('edit-html').value;
+        const css = document.getElementById('edit-css').value;
+        const js = document.getElementById('edit-js').value;
+
+        if (format === 'html-combined') {
+          const combinedCode = `<!DOCTYPE html>\n<html lang="tr">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>ProDev Export</title>\n  <style>\n${css}\n  </style>\n</head>\n<body>\n${html}\n\n  <script>\n${js}\n  <\/script>\n</body>\n</html>`;
+          downloadFile('index.html', combinedCode, 'text/html');
+          showToast('Tek dosya olarak başarıyla indirildi!');
+        } else if (format === 'separate') {
+          const basicHtml = `<!DOCTYPE html>\n<html lang="tr">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>ProDev Export</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n${html}\n\n  <script src="script.js"><\/script>\n</body>\n</html>`;
+          downloadFile('index.html', basicHtml, 'text/html');
+          setTimeout(() => downloadFile('style.css', css, 'text/css'), 300);
+          setTimeout(() => downloadFile('script.js', js, 'text/javascript'), 600);
+          showToast('Dosyalar ayrı ayrı indirildi!');
+        }
+        closeDownloadModal();
+      };
+
+      const showToast = (msg) => {
+        const t = document.getElementById('toast'); t.innerText = msg;
+        t.className = "fixed bottom-6 right-6 z-[200] bg-gray-900 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 opacity-100 transform translate-y-0";
+        setTimeout(() => t.className = "fixed bottom-6 right-6 z-[200] bg-gray-900 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none transform translate-y-2", 2500);
+      };
+
+      return {
+        init, switchMainTab, onEditorInput, syncScroll, updatePreview, clearConsole, toggleConsole, hardRefreshPreview, 
+        triggerFormat, triggerUndo, triggerRedo, toggleFullscreenPreview,
+        triggerCodeAnalysis, closeHealth, dragResizeStart, togglePanelSize, minimizePanel, setDeviceMode, 
+        openSettings, closeSettings, setTheme, setFontSize, toggleWordWrap, toggleAutoSave, 
+        openDownloadModal, closeDownloadModal, exportProject, // İndirme fonksiyonları
+        startLessonInPlayground, checkLessonInPlayground, exitLessonMode, toggleLessonDetails, showToast
+      };
+    })();
+
+    window.addEventListener('DOMContentLoaded', App.init);
+  </script>
+</body>
+</html>
